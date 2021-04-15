@@ -20,18 +20,20 @@ public class LoginMenu implements Menu {
         scanner = new Scanner(System.in);
 
 
-        while(true)
-        {
-          int choice =  scanner.nextInt();
+        while (true) {
+            int choice = scanner.nextInt();
 
-          switch (choice)
-          {
-              case 1 :
-                  loginSubMenu(scanner); break;
-              case 2 :
-                  loginSubMenu(scanner); break;
-              case 0 : exit(); break;
-          }
+            switch (choice) {
+                case 1:
+                    loginSubMenu(scanner);
+                    break;
+                case 2:
+                    loginSubMenu(scanner);
+                    break;
+                case 0:
+                    exit();
+                    break;
+            }
         }
     }
 
@@ -40,25 +42,22 @@ public class LoginMenu implements Menu {
         System.exit(0);
     }
 
-    private void loginSubMenu(Scanner scanner)
-    {
+    private void loginSubMenu(Scanner scanner) {
         System.out.println("input login:");
-        String login =  scanner.nextLine();
+        String login = scanner.nextLine();
 
         System.out.println("input password:");
-        String password =  scanner.nextLine();
+        String password = scanner.nextLine();
 
-        if(userService.login(login, password)) {
+        if (userService.login(login, password)) {
 
-        }
-        else {
+        } else {
             System.out.println("Wrong username/pasword");
             show();
         }
     }
 
-    private void registerSubMenu(Scanner scanner)
-    {
+    private void registerSubMenu(Scanner scanner) {
         show(); //todo add impl
     }
 }
