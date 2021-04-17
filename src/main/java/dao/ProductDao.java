@@ -1,4 +1,6 @@
 package dao;
 
-public interface ProductDao {
+import model.Product;
+
+public interface ProductDao extends Dao<Product> {
 }

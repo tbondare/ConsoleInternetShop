@@ -1,7 +1,12 @@
+import view.impl.LoginMenu;
+
 public class ConsoleInternetShop {
 
-    start() {
+    public static void start() {
+        System.out.println("Greetings");
+
+        new LoginMenu().show();
+
     }
-LOGINMENU.show()
 
 }
