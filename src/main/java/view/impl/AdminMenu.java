@@ -1,4 +1,4 @@
 package view.impl;
 
-public class AdminMenu {
+public class AdminMenu implements SubMenu{
 }
