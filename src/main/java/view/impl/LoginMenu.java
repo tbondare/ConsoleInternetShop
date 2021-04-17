@@ -60,4 +60,7 @@ public class LoginMenu implements Menu {
     private void registerSubMenu(Scanner scanner) {
         show(); //todo add impl
     }
+
+    @Override
+    public void back() {exitProgram();}
 }
