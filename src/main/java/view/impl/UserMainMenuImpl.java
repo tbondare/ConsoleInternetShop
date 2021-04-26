@@ -12,12 +12,12 @@ public class UserMenu implements SubMenu {
 
     public UserMenu() {
         this.productServiceImpl = new ProductServiceImpl();
+        scanner = new Scanner(System.in);
     }
 
     @Override
-    void productsSubMenuShow() {
+    public void productsSubMenuShow(User user) {
         String[] productItems = {"1.Choose product", "2.Search product", "3.Order checkout", "0.Exit"};
-        scanner = new Scanner(System.in);
         answer = scanner.nextLine();
         switch (answer) {
             case ("1") :
@@ -38,16 +38,16 @@ public class UserMenu implements SubMenu {
     }
 
     @Override
-    void ordersMenuShow(User user) {
+    public void ordersMenuShow(User user) {
         ordersShow(user);
     }
 
     @Override
-    void usersMenuShow(User user){
+    public void usersMenuShow(User user){
         usersMenuShow();
     }
 
-    public void productsShow() {
+    private void productsShow() {
         for (Product product : productServiceImpl.getAllProducts()) {
             System.out.println(currentProduct.toString());
         }
@@ -58,29 +58,21 @@ public class UserMenu implements SubMenu {
         }
     }
 
-    void ordersShow(User user) {
+    private void ordersShow(User user) {
         ArrayList<Order> orders = user.getOrderList();
         for (Order currentOrder : orders) {
             System.out.println(currentOrder.toString());
         }
-        printMessage("checkout order");
-        answer = scanAnswer(() -> ordersShow(user));
-        if (answer.equals("1")) {
-            checkoutOrder();
-        }
     }
 
-    void usersMenuShow(){
+    private void usersMenuShow(){ }
 
-    }
-
-    void productChooserMenu(){
+    private void productChooserMenu(){
         printMessage("choose product by id");
         String input = scanAnswer(this::productChooserMenu);
         if (input.equals("1")) {
             System.out.println("Enter id of product");
         }
-        scanner = new Scanner(System.in);
         answer = scanner.nextLine();
         Product product = productServiceImpl.getProduct(answer);
         if (Optional.ofNullable(product).isPresent()) {
@@ -92,9 +84,8 @@ public class UserMenu implements SubMenu {
         }
     }
 
-    void searchingProductByName(){
+    private void searchingProductByName(){
         printMessage("enter product name");
-        scanner = new Scanner(System.in);
         String nameProduct = scanner.nextLine();
         Product product = productServiceImpl.getProductByName(nameProduct);
         if (Optional.ofNullable(product).isPresent()) {
@@ -110,13 +101,33 @@ public class UserMenu implements SubMenu {
         }
     }
 
-    void checkoutOrder(){
-//        1. проверка корзины;
-//        если да
-//          "do chose your order";
-//          confirmOrder(order) - находится в сервисном уровне;
-//        если нет
-//          ретерн назад;
+    private void checkoutOrder(){
+        checkOrderForExistence();
+        if (!order.getBox().isEmpty()) {
+            for (Product product : order.getListProducts()) {
+                System.out.print(product + " ");
+            }
+            System.out.println("1. checkout your order 2. back to product Chooser Menu 3. back to main menu");
+            answer = scanner.nextLine();
+            switch (answer) {
+                case ("1"):
+                    confirmOrder(order, user); // - находится в сервисном уровне;
+                    break;
+                case ("2"):
+                    productChooserMenu();
+                    break;
+                case ("3"):
+                    showSubMenu(SubMenu submenu, User user);
+                    break;
+                default :
+                    System.out.println("Wrong number. Please, enter correct number");
+                    this.checkoutOrder();
+            }
+        }
+        else {
+            System.out.println("basket is empty");
+            showSubMenu(SubMenu submenu, User user);
+        }
     }
 
     void exit();
@@ -125,7 +136,8 @@ public class UserMenu implements SubMenu {
     }
 
     private void checkOrderForExistence() {
-        this.order == null ? this.order = new Order() : 0;
+        if(this.order == null)
+            this.order = new Order();
     }
 
     private void printMessage(String string) {
@@ -133,8 +145,7 @@ public class UserMenu implements SubMenu {
     }
 
     private String scanAnswer(Runnable method) {
-        Scanner in = new Scanner(System.in);
-        String input = in.nextLine();
+        String input = scanner.nextLine();
         if (input == "1") {
             return "1";
         }
